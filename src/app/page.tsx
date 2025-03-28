@@ -1,4 +1,4 @@
-import { GalleryItem } from "@/components/molecules/GalleryItem";
+import { GalleryItem } from "@/components/molecules";
 
 export default function Home() {
   return (
