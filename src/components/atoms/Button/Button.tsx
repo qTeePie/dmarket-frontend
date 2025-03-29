@@ -1,20 +1,33 @@
-// components/atoms/Button/Button.tsx
-import styles from "./styles.module.css";
-import clsx from "clsx";
+// /components/atoms/Button.tsx
+import { ReactNode } from "react";
 
-type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  children: React.ReactNode;
-  hoverColor?: string;
-};
+interface ButtonProps {
+  onClick: () => void;
+  children: ReactNode;
+  color?: "primary" | "secondary" | "danger"; // Add more if you want
+  className?: string;
+}
 
-export const Button = ({
+export function Button({
+  onClick,
   children,
-  hoverColor = "hover:bg-purple-500",
-  ...props
-}: Props) => {
+  color = "primary", // default
+  className = "",
+}: ButtonProps) {
+  const baseStyle = "p-2 rounded-lg text-white";
+  const colorStyle =
+    color === "primary"
+      ? "bg-pink-500"
+      : color === "secondary"
+      ? "bg-blue-500"
+      : "bg-red-600";
+
   return (
-    <button className={clsx(styles.button, hoverColor)} {...props}>
+    <button
+      onClick={onClick}
+      className={`${baseStyle} ${colorStyle} ${className}`}
+    >
       {children}
     </button>
   );
-};
+}
