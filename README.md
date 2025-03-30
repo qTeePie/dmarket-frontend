@@ -1,3 +1,49 @@
+# Kitz Universe – Minimal On-Chain NFT Marketplace 🐱‍👤✨
+
+This is a simple, minimalistic NFT marketplace built entirely from scratch – including smart contracts and frontend.  
+The goal of this project is to create a fully on-chain, clean, cyberpunk-inspired platform to display, buy, and sell NFTs.
+
+> **Note:** This project is still a work in progress. The core functionality is being prioritized first — styling and advanced features will be improved in later versions.
+
+---
+
+## 🪐 Features (In Progress)
+
+- On-chain ERC721 contract
+- Dynamic NFT fetching (on-chain metadata)
+- Display NFTs in a clean gallery
+- Individual NFT page with collection name + metadata
+- Basic Buy button (functionality coming soon)
+
+---
+
+## 🎯 Why this project?
+
+This project is built for learning and to demonstrate:
+
+- Clean folder structure (Atomic Design + Features-based)
+- Full on-chain interaction (no backend database)
+- Real-world use of ethers.js, Next.js App Router, and Foundry
+
+---
+
+## 🚧 What's missing / coming next
+
+- Buy & Sell functionality
+- User wallet connection
+- Full UI/UX polish
+- Tests & security hardening
+
+---
+
+## 🤍 Disclaimer
+
+This is a learning project and still under development.
+It’s intentionally kept **simple and clean** rather than over-engineered.
+Focus is on **understanding the full stack of NFT marketplaces, from Solidity to React.**
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
