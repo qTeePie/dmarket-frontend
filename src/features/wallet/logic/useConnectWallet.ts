@@ -39,6 +39,5 @@ export function useConnectWallet() {
         });
     }
   }, []);
-
   return { account, connect };
 }

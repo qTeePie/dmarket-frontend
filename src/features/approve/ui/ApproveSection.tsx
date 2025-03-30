@@ -1,9 +1,7 @@
-"use client";
-
 import { useState } from "react";
 import { ethers } from "ethers";
 
-export function ApproveSection({ tokenId }: { tokenId: number }) {
+export const ApproveSection = ({ tokenId }: { tokenId: number }) => {
   const [marketplace, setMarketplace] = useState("");
 
   async function handleClick() {
@@ -32,4 +30,4 @@ export function ApproveSection({ tokenId }: { tokenId: number }) {
       <button onClick={handleClick}>Approve Marketplace</button>
     </div>
   );
-}
+};

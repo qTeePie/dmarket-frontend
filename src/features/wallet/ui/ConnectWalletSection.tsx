@@ -2,7 +2,7 @@
 
 import { useConnectWallet } from "../";
 
-export function ConnectWalletSection() {
+export const ConnectWalletSection = () => {
   const { account, connect } = useConnectWallet();
 
   return (
@@ -14,4 +14,4 @@ export function ConnectWalletSection() {
       )}
     </div>
   );
-}
+};
