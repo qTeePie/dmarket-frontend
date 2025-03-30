@@ -10,7 +10,7 @@ import { ConnectWalletSection } from "@/features/";
 
 export default function Home() {
   const { approved, loading } = useFetchApprovedMarketplace(
-    "0x0ff833129533546d96a5847c22b57aacccd00fd5",
+    process.env.NEXT_PUBLIC_DNFT_CONTRACT!,
     0
   );
   const { count, increment } = useTestEffect();
@@ -19,9 +19,6 @@ export default function Home() {
     <main>
       <h1>NFT Approved Marketplace:</h1>
       <ApprovedInfo approved={approved} loading={loading} />
-      <ApproveSection tokenId={0} />
-      <ConnectWalletSection />
-      <Button onClick={increment}>Herregud</Button>
     </main>
   );
 }

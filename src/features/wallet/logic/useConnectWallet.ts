@@ -1,5 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
+
+import { useState } from "react";
 import { ethers } from "ethers";
 
 declare global {
@@ -27,17 +28,5 @@ export function useConnectWallet() {
     }
   };
 
-  // Auto-connect if already connected
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.ethereum) {
-      window.ethereum
-        .request({ method: "eth_accounts" })
-        .then((accounts: string[]) => {
-          if (accounts.length > 0) {
-            setAccount(accounts[0]);
-          }
-        });
-    }
-  }, []);
   return { account, connect };
 }
