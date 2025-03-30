@@ -2,13 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fetchNFT } from "@/lib/blockchain/nft";
-
-// Define the NFT type
-type NFT = {
-  title: string;
-  image: string;
-  price: string | undefined;
-};
+import { NFT } from "@/types/nft";
 
 export const useFetchNFT = (nftAddress: string, tokenId: number) => {
   const [loading, setLoading] = useState(true);

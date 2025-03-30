@@ -2,22 +2,36 @@
 
 import { useFetchNFT } from "../";
 import { GalleryItem } from "@/components";
-
-// Define the NFT type
-type NFT = {
-  title: string;
-  image: string;
-  price: string | undefined;
-};
+import Link from "next/link";
 
 export const NFTGallery = () => {
   const { nft, loading } = useFetchNFT(
-    "0xa86582Ad5E80abc19F95f8A9Fb3905Cda0dAbd59"!,
+    process.env.NEXT_PUBLIC_DNFT_CONTRACT!,
     0
   );
 
-  if (loading || !nft) return <div>Loading...</div>;
   return (
-    <GalleryItem title={nft.title} image={nft.image} price={nft.price ?? ""} />
+    <div className="flex flex-col gap-4">
+      <h2 className="text-xl font-semibold text-white">✨ Featured NFT ✨</h2>
+
+      {loading || !nft ? (
+        <div>Loading...</div>
+      ) : (
+        <div className="grid grid-cols-4 gap-4">
+          {Array.from({ length: 20 }).map((_, index) => (
+            <Link
+              key={index}
+              href={`/nft/${nft.contract}/${index}`} // dynamic contract & tokenId
+            >
+              <GalleryItem
+                title={nft.title} // changed from title → name
+                image={nft.image}
+                price={nft.price ?? ""}
+              />
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
   );
 };

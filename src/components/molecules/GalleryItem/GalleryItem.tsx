@@ -10,6 +10,7 @@ export const GalleryItem = ({ title, image, price }: Props) => {
       <img
         src={image}
         alt={title}
+        style={{ filter: "none" }}
         className="h-60 w-full object-cover rounded-t-2xl transition duration-300 group-hover:scale-105"
       />
 
