@@ -1,13 +1,13 @@
-import { GalleryItem } from "@/components/molecules";
+"use client";
 
 export default function Home() {
   return (
-    <main className="p-10">
-      <GalleryItem
-        title="Cyber Kitty 001"
-        image="/images/cyber-kitty.png"
-        price="0.42"
-      />
+    <main className="flex flex-col items-center justify-center min-h-screen p-10 gap-6 text-center">
+      <h1 className="text-4xl font-bold">DMrkt</h1>
+      <p className="text-lg max-w-xl">
+        The minimal, on-chain NFT marketplace where creators control their
+        royalties.
+      </p>
     </main>
   );
 }
