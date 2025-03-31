@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchNFT } from "@/lib/blockchain/nft";
+import { fetchNFT } from "@/lib/blockchain/read";
 import { NFT } from "@/types/nft";
 
 export const useFetchNFT = (nftAddress: string, tokenId: number) => {

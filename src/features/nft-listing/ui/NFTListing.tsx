@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { ethers } from "ethers";
+import { Button } from "@/components";
+import { approveMarketplace } from "@/lib/blockchain/write";
 
 export const NFTListing = () => {
   const [nftAddress, setNftAddress] = useState("");
@@ -31,7 +33,9 @@ export const NFTListing = () => {
           value={price}
           onChange={(e) => setPrice(e.target.value)}
         />
-        <button className="bg-blue-600 text-white p-2 rounded">List NFT</button>
+        <Button onClick={() => approveMarketplace(nftAddress, Number(tokenId))}>
+          Approve Marketplace
+        </Button>
       </div>
     </div>
   );
