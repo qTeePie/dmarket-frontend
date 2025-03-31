@@ -1,6 +1,6 @@
 // /app/nft/[contract]/[tokenId]/page.tsx
 
-import { fetchNFT, fetchCollectionName } from "@/lib/blockchain/nft";
+import { fetchNFT, fetchCollectionName } from "@/lib/blockchain/read";
 import { NFTDisplay } from "@/features/nft-gallery";
 
 export default async function NFTPage(props: {
