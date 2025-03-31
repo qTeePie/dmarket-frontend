@@ -8,12 +8,12 @@ interface ButtonProps {
   className?: string;
 }
 
-export function Button({
+export const Button = ({
   onClick,
   children,
   color = "primary", // default
   className = "",
-}: ButtonProps) {
+}: ButtonProps) => {
   const baseStyle = "p-2 rounded-lg text-white";
   const colorStyle =
     color === "primary"
@@ -30,4 +30,4 @@ export function Button({
       {children}
     </button>
   );
-}
+};
