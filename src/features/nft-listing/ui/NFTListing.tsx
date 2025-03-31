@@ -11,7 +11,7 @@ export const NFTListing = () => {
   const [price, setPrice] = useState("");
 
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen gap-4 p-6">
+    <div className="flex flex-col items-center gap-4 p-6">
       <h1 className="text-2xl font-bold">List Your NFT</h1>
 
       <div className="flex flex-col gap-3 w-full max-w-sm">

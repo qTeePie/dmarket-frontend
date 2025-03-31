@@ -4,7 +4,7 @@ import { NFTListing } from "@/features/nft-listing";
 
 export default function Home() {
   return (
-    <main>
+    <main className="mt-24">
       <NFTListing />
     </main>
   );
