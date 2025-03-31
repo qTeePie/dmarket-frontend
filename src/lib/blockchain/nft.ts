@@ -3,13 +3,28 @@ import { ethers } from "ethers";
 import provider from "./provider";
 import { NFT } from "@/types/nft";
 
+// DMrkt address
+const marketplaceAddress = process.env.NEXT_PUBLIC_MARKETPLACE;
+
 // Minimal ERC721 ABI
 const ERC721_ABI = [
-  "function getApproved(uint256 tokenId) view returns (address)",
-  "function ownerOf(uint256 tokenId) view returns (address)",
   "function name() view returns (string memory)",
+  "function ownerOf(uint256 tokenId) view returns (address)",
   "function tokenURI(uint256 tokenId) view returns (string memory)",
+  // Approve NFTlisting-related
+  "function approveMarketplace(address marketplace, uint256 tokenId) ",
+  "function approve(address to, uint256 tokenId) external",
+  "function getApproved(uint256 tokenId) view returns (address)",
 ];
+
+export async function approveMarketplace(nftAddress: string, tokenId: number) {
+  const contract = new ethers.Contract(
+    nftAddress,
+    ERC721_ABI,
+    await provider.getSigner()
+  );
+  await contract.approve(marketplaceAddress, tokenId);
+}
 
 export async function fetchApprovedMarketplace(
   nftAddress: string,

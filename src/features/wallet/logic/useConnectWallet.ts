@@ -19,6 +19,10 @@ export function useConnectWallet() {
     }
 
     try {
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const address = await signer.getAddress();
