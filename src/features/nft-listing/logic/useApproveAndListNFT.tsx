@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react";
-import { approveMarketplace } from "@/lib/blockchain/write";
-import { listNFT } from "@/lib/blockchain/write";
+import { approveMarketplace, listNFT } from "@/lib/blockchain/write";
 import { fetchApprovedMarketplace } from "@/lib/blockchain/read";
 import { NFTListing } from "@/types/nft";
 
 const addrMarketplace = process.env.NEXT_PUBLIC_MARKETPLACE;
 
-// TokenID and NFTAddress is passed to the function
-// Marketplace address already defined as env variable
 export const useApproveAndListNFT = (
   nftAddress: string,
   tokenId: number,
@@ -16,31 +13,45 @@ export const useApproveAndListNFT = (
   const [isLoading, setIsLoading] = useState(false);
   const [isApproved, setApproved] = useState<boolean | null>(null);
   const [error, setError] = useState<Error | null>(null);
-  const [nftListing, setNftListing] = useState<NFTListing>();
+  const [nftListing, setNftListing] = useState<NFTListing | null>(null);
+
+  // Check approval status when hook mounts
+  useEffect(() => {
+    const checkApproval = async () => {
+      try {
+        if (!addrMarketplace)
+          throw new Error("Marketplace address not defined");
+        const approvedMarketplace = await fetchApprovedMarketplace(
+          nftAddress,
+          tokenId
+        );
+        setApproved(approvedMarketplace === addrMarketplace);
+      } catch (err) {
+        setError(err as Error);
+      }
+    };
+    checkApproval();
+  }, [nftAddress, tokenId]);
 
   const handleApproveMarketplace = async () => {
-    if (!addrMarketplace) throw new Error("Marketplace address is not defined");
     setIsLoading(true);
     try {
-      // Ask for approval
-      const res = await approveMarketplace(nftAddress, tokenId);
-      console.log(res);
-      const approvedMarketplace = await fetchApprovedMarketplace(
-        nftAddress,
-        tokenId
-      );
-
-      const approved = approvedMarketplace === addrMarketplace;
-      setApproved(approved);
-
-      if (approved) {
-        // ListNFT at marketplace if approced
-        const tx = await listNFT(nftAddress, tokenId, price);
-        console.log(tx);
-      }
+      await approveMarketplace(nftAddress, tokenId);
+      setApproved(true);
     } catch (err) {
       setError(err as Error);
-      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleListNFT = async () => {
+    setIsLoading(true);
+    try {
+      const tx = await listNFT(nftAddress, tokenId, price);
+      setNftListing(tx);
+    } catch (err) {
+      setError(err as Error);
     } finally {
       setIsLoading(false);
     }
@@ -49,6 +60,9 @@ export const useApproveAndListNFT = (
   return {
     isLoading,
     isApproved,
+    error,
+    nftListing,
     handleApproveMarketplace,
+    handleListNFT,
   };
 };

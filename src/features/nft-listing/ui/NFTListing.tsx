@@ -1,10 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ethers } from "ethers";
 import { Button } from "@/components";
-import { approveMarketplace } from "@/lib/blockchain/write";
-import { useApproveAndGetApprovedMarketplace } from "../logic/useApproveAndGetApprovedMarketplace";
+import { useApproveAndListNFT } from "../logic/useApproveAndListNFT";
 
 export const NFTListing = () => {
   const [nftAddress, setNftAddress] = useState("");
@@ -12,11 +10,7 @@ export const NFTListing = () => {
   const [price, setPrice] = useState("");
 
   const { handleApproveMarketplace, isLoading, isApproved } =
-    useApproveAndGetApprovedMarketplace(
-      nftAddress,
-      Number(tokenId),
-      Number(price)
-    );
+    useApproveAndListNFT(nftAddress, Number(tokenId), Number(price));
 
   return (
     <div className="flex flex-col items-center gap-4 p-6">
@@ -41,7 +35,23 @@ export const NFTListing = () => {
           value={price}
           onChange={(e) => setPrice(e.target.value)}
         />
-        <Button onClick={handleApproveMarketplace}>Approve Marketplace</Button>
+
+        <Button onClick={handleApproveMarketplace}>
+          {isLoading ? "Approving..." : "Approve Marketplace"}
+        </Button>
+
+        {/* 💅 Feedback messages */}
+        {isLoading && (
+          <p className="text-sm text-gray-500">
+            ⏳ Waiting for confirmation...
+          </p>
+        )}
+        {isApproved === false && (
+          <p className="text-sm text-red-500">❌ Marketplace not approved</p>
+        )}
+        {isApproved === true && (
+          <p className="text-sm text-green-600">✅ Marketplace approved!</p>
+        )}
       </div>
     </div>
   );
