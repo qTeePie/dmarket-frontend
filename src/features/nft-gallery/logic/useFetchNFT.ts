@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { fetchNFT } from "@/lib/blockchain/read";
-import { NFT } from "@/types/nft";
+import { NFTListing } from "@/types/nft";
 
 export const useFetchNFT = (nftAddress: string, tokenId: number) => {
   const [loading, setLoading] = useState(true);
-  const [nft, setNft] = useState<NFT | null>(null);
+  const [nft, setNft] = useState<NFTListing | null>(null);
 
   useEffect(() => {
     const fetch = async () => {

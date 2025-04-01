@@ -4,11 +4,19 @@ import { useState } from "react";
 import { ethers } from "ethers";
 import { Button } from "@/components";
 import { approveMarketplace } from "@/lib/blockchain/write";
+import { useApproveAndGetApprovedMarketplace } from "../logic/useApproveAndGetApprovedMarketplace";
 
 export const NFTListing = () => {
   const [nftAddress, setNftAddress] = useState("");
   const [tokenId, setTokenId] = useState("");
   const [price, setPrice] = useState("");
+
+  const { handleApproveMarketplace, isLoading, isApproved } =
+    useApproveAndGetApprovedMarketplace(
+      nftAddress,
+      Number(tokenId),
+      Number(price)
+    );
 
   return (
     <div className="flex flex-col items-center gap-4 p-6">
@@ -33,9 +41,7 @@ export const NFTListing = () => {
           value={price}
           onChange={(e) => setPrice(e.target.value)}
         />
-        <Button onClick={() => approveMarketplace(nftAddress, Number(tokenId))}>
-          Approve Marketplace
-        </Button>
+        <Button onClick={handleApproveMarketplace}>Approve Marketplace</Button>
       </div>
     </div>
   );

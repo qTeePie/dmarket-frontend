@@ -3,10 +3,10 @@
 "use client"; // You can keep this if you want interactivity (Buy button, etc.)
 
 import { GalleryItem } from "@/components";
-import { NFT } from "@/types/nft";
+import { NFTListing } from "@/types/nft";
 
 type Props = {
-  nft: NFT;
+  nft: NFTListing;
   collectionName: string;
 };
 
