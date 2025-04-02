@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components";
-import { useApproveAndListNFT } from "../logic/useApproveAndListNFT";
+import { useApproveMarketplace } from "../logic/useApproveMarketplace";
 
 export const NFTListing = () => {
   const [nftAddress, setNftAddress] = useState("");
@@ -10,7 +10,7 @@ export const NFTListing = () => {
   const [price, setPrice] = useState("");
 
   const { handleApproveMarketplace, isLoading, isApproved } =
-    useApproveAndListNFT(nftAddress, Number(tokenId), Number(price));
+    useApproveMarketplace(nftAddress, Number(tokenId), Number(price));
 
   return (
     <div className="flex flex-col items-center gap-4 p-6">

@@ -2,6 +2,7 @@
 import { ethers } from "ethers";
 import { getBrowserProvider } from "@/lib/blockchain/browserProvider";
 import { ERC721_ABI } from "@/lib/blockchain/abi/erc721";
+import { addRequestMeta } from "next/dist/server/request-meta";
 
 // DMrkt address
 const addrMarketplace = process.env.NEXT_PUBLIC_MARKETPLACE;
@@ -15,20 +16,26 @@ export const listNFT = async (
   tokenId: number,
   price: number
 ) => {
-  // Get provider
+  if (!addrMarketplace) throw new Error("Marketplace address is not defined");
+
   const provider = getBrowserProvider();
-  // Prompt for signature
   const signer = await provider.getSigner();
+  const contract = new ethers.Contract(addrMarketplace, ERC721_ABI, signer);
 
-  if (!addrMarketplace) {
-    throw new Error("Marketplace address is not defined");
-  }
+  contract.once(
+    "NFTListed",
+    (listingId, seller, nftContractAddr, tokenId, price) => {
+      console.log("🔥 Event fired:");
+      console.log("Listing ID:", listingId.toString());
+      console.log("Seller:", seller);
+      console.log("NFT Contract:", nftContractAddr);
+      console.log("Token ID:", tokenId.toString());
+      console.log("Price:", ethers.formatEther(price));
+    }
+  );
 
-  // init our contract object
-  const contract = new ethers.Contract(addrMarketplace!, ERC721_ABI, signer);
-  // send tx, wait for txresponse
   const tx = await contract.listNFT(nftContract, tokenId, price);
-  // wait for txreceipt
   await tx.wait();
+
   return tx;
 };
