@@ -20,17 +20,22 @@ export const useApproveMarketplace = (
 
   const handleApproveMarketplace = async () => {
     // fetch before approval to prevent unecessery gas cost if already approved
+    if (!addrMarketplace) throw new Error("Marketplace address is not defined");
+
     const approvedMarketplace = await fetchApprovedMarketplace(
       nftAddress,
       tokenId
     );
-    const approved = approvedMarketplace === addrMarketplace;
+
+    const approved =
+      approvedMarketplace.toLowerCase() === addrMarketplace.toLowerCase();
+
     setApproved(approved);
+
     if (approved) {
       return;
     }
 
-    if (!addrMarketplace) throw new Error("Marketplace address is not defined");
     setIsLoading(true);
     try {
       // Ask for approval
@@ -42,7 +47,7 @@ export const useApproveMarketplace = (
       );
       const approved = approvedMarketplace === addrMarketplace;
       setApproved(approved);
-
+      console.log("wtf its approved");
       /*if (approved) {
         // ListNFT at marketplace if approced
         const tx = await listNFT(nftAddress, tokenId, price);

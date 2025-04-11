@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components";
+import { Button, Input } from "@/components";
 import { useApproveMarketplace } from "../logic/useApproveMarketplace";
+import { listNFT } from "@/lib/blockchain/write";
 
 export const NFTListing = () => {
   const [nftAddress, setNftAddress] = useState("");
@@ -17,27 +18,35 @@ export const NFTListing = () => {
       <h1 className="text-2xl font-bold">List Your NFT</h1>
 
       <div className="flex flex-col gap-3 w-full max-w-sm">
-        <input
-          className="border p-2 rounded"
-          placeholder="NFT Contract Address"
+        <Input
           value={nftAddress}
           onChange={(e) => setNftAddress(e.target.value)}
+          placeholder="NFT Contract Address"
         />
-        <input
-          className="border p-2 rounded"
-          placeholder="Token ID"
+        <Input
           value={tokenId}
           onChange={(e) => setTokenId(e.target.value)}
+          placeholder="Token ID"
         />
-        <input
-          className="border p-2 rounded"
-          placeholder="Price in ETH"
+        <Input
           value={price}
           onChange={(e) => setPrice(e.target.value)}
+          placeholder="Price in ETH"
         />
 
-        <Button onClick={handleApproveMarketplace}>
+        <Button
+          onClick={handleApproveMarketplace}
+          disabled={isLoading || isApproved == true}
+        >
           {isLoading ? "Approving..." : "Approve Marketplace"}
+        </Button>
+        <Button
+          onClick={() => {
+            listNFT(nftAddress, Number(tokenId), Number(price));
+          }}
+          disabled={isLoading || isApproved == false}
+        >
+          {isLoading ? "..." : "List NFT"}
         </Button>
 
         {/* 💅 Feedback messages */}
