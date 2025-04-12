@@ -2,7 +2,6 @@
 import { ethers } from "ethers";
 import { getBrowserProvider } from "@/lib/blockchain/browserProvider";
 import { ERC721_ABI } from "@/lib/blockchain/abi/erc721";
-import { addRequestMeta } from "next/dist/server/request-meta";
 
 // DMrkt address
 const addrMarketplace = process.env.NEXT_PUBLIC_MARKETPLACE;

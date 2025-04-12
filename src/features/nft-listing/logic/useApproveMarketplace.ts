@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { approveMarketplace } from "@/lib/blockchain/write";
-import { listNFT } from "@/lib/blockchain/write";
 import { fetchApprovedMarketplace } from "@/lib/blockchain/read";
 import { NFTListing } from "@/types/nft";
 
@@ -8,17 +7,15 @@ const addrMarketplace = process.env.NEXT_PUBLIC_MARKETPLACE;
 
 // TokenID and NFTAddress is passed to the function
 // Marketplace address already defined as env variable
-export const useApproveMarketplace = (
-  nftAddress: string,
-  tokenId: number,
-  price: number
-) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isApproved, setApproved] = useState<boolean | null>(null);
+export const useApproveMarketplace = () => {
+  const [isApproving, setIsApproving] = useState(false);
+  const [isApproved, setApproved] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
-  const [nftListing, setNftListing] = useState<NFTListing>();
 
-  const handleApproveMarketplace = async () => {
+  const handleApproveMarketplace = async (
+    nftAddress: string,
+    tokenId: number
+  ) => {
     // fetch before approval to prevent unecessery gas cost if already approved
     if (!addrMarketplace) throw new Error("Marketplace address is not defined");
 
@@ -36,7 +33,7 @@ export const useApproveMarketplace = (
       return;
     }
 
-    setIsLoading(true);
+    setIsApproving(true);
     try {
       // Ask for approval
       const res = await approveMarketplace(nftAddress, tokenId);
@@ -58,13 +55,14 @@ export const useApproveMarketplace = (
       setError(err as Error);
       console.error(err);
     } finally {
-      setIsLoading(false);
+      setIsApproving(false);
     }
   };
 
   return {
-    isLoading,
+    isApproving,
     isApproved,
     handleApproveMarketplace,
+    error,
   };
 };

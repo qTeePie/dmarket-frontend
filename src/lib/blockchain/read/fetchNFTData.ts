@@ -5,7 +5,7 @@ import { ERC721_ABI } from "@/lib/blockchain/abi/erc721";
 import { NFTListing } from "@/types/nft";
 
 // DMrkt address
-const marketplaceAddress = process.env.NEXT_PUBLIC_MARKETPLACE;
+const marketplaceAddr = process.env.NEXT_PUBLIC_MARKETPLACE;
 
 export const fetchNFTOwner = async (nftAddress: string, tokenId: number) => {
   const contract = new ethers.Contract(nftAddress, ERC721_ABI, provider);

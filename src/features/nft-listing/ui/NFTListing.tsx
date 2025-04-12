@@ -1,18 +1,36 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Input } from "@/components";
 import { useApproveMarketplace } from "../logic/useApproveMarketplace";
-import { listNFT } from "@/lib/blockchain/write";
+import { useListNFT } from "../logic/useListNFT";
+import { useWallet } from "@/context/WalletContext";
 
 export const NFTListing = () => {
   const [nftAddress, setNftAddress] = useState("");
   const [tokenId, setTokenId] = useState("");
   const [price, setPrice] = useState("");
 
-  const { handleApproveMarketplace, isLoading, isApproved } =
-    useApproveMarketplace(nftAddress, Number(tokenId), Number(price));
+  const { account } = useWallet();
+  const { handleApproveMarketplace, isApproving, isApproved } =
+    useApproveMarketplace();
+  const { handleListNFT, isListing, error } = useListNFT();
 
+  const isBusy = isApproving || isListing;
+
+  // 🛑 No wallet? Don't render the form at all
+  if (!account) {
+    return (
+      <div className="p-6 text-center">
+        <p className="text-sm text-red-500">
+          ❌ Connect your wallet to list an NFT.
+        </p>
+        <p>Wallet: {account ?? "Not connected"}</p>
+      </div>
+    );
+  }
+
+  // ✅ Wallet connected? Show the whole UI
   return (
     <div className="flex flex-col items-center gap-4 p-6">
       <h1 className="text-2xl font-bold">List Your NFT</h1>
@@ -35,30 +53,30 @@ export const NFTListing = () => {
         />
 
         <Button
-          onClick={handleApproveMarketplace}
-          disabled={isLoading || isApproved == true}
+          onClick={() => handleApproveMarketplace(nftAddress, Number(tokenId))}
+          disabled={isBusy || isApproved}
         >
-          {isLoading ? "Approving..." : "Approve Marketplace"}
+          {isApproving ? "Approving..." : "Approve Marketplace"}
         </Button>
+
         <Button
-          onClick={() => {
-            listNFT(nftAddress, Number(tokenId), Number(price));
-          }}
-          disabled={isLoading || isApproved == false}
+          onClick={() =>
+            handleListNFT(nftAddress, account, Number(tokenId), Number(price))
+          }
+          disabled={isBusy || !isApproved}
         >
-          {isLoading ? "..." : "List NFT"}
+          {isListing ? "Listing..." : "List NFT"}
         </Button>
 
         {/* 💅 Feedback messages */}
-        {isLoading && (
-          <p className="text-sm text-gray-500">
-            ⏳ Waiting for confirmation...
-          </p>
+        {isApproving && (
+          <p className="text-sm text-gray-500">⏳ Waiting for approval...</p>
         )}
-        {isApproved === false && (
-          <p className="text-sm text-red-500">❌ Marketplace not approved</p>
+        {isListing && (
+          <p className="text-sm text-blue-500">✨ Listing your NFT...</p>
         )}
-        {isApproved === true && (
+        {error && <p className="text-sm text-red-500">❌ {error.message}</p>}
+        {isApproved && !isApproving && !isListing && (
           <p className="text-sm text-green-600">✅ Marketplace approved!</p>
         )}
       </div>
