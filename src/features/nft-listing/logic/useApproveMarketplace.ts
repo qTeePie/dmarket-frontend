@@ -1,68 +1,60 @@
 import { useState } from "react";
 import { approveMarketplace } from "@/lib/blockchain/write";
 import { fetchApprovedMarketplace } from "@/lib/blockchain/read";
-import { NFTListing } from "@/types/nft";
 
 const addrMarketplace = process.env.NEXT_PUBLIC_MARKETPLACE;
 
-// TokenID and NFTAddress is passed to the function
-// Marketplace address already defined as env variable
-export const useApproveMarketplace = () => {
-  const [isApproving, setIsApproving] = useState(false);
+export const useApproveMarketplace = ({
+  setTxError,
+  setTxLoading,
+}: {
+  setTxError: (err: Error | null) => void;
+  setTxLoading: (loading: boolean) => void;
+}) => {
   const [isApproved, setApproved] = useState<boolean>(false);
-  const [error, setError] = useState<Error | null>(null);
 
   const handleApproveMarketplace = async (
     nftAddress: string,
     tokenId: number
   ) => {
-    // fetch before approval to prevent unecessery gas cost if already approved
     if (!addrMarketplace) throw new Error("Marketplace address is not defined");
 
-    const approvedMarketplace = await fetchApprovedMarketplace(
-      nftAddress,
-      tokenId
-    );
+    setTxLoading(true);
+    setTxError(null);
 
-    const approved =
-      approvedMarketplace.toLowerCase() === addrMarketplace.toLowerCase();
-
-    setApproved(approved);
-
-    if (approved) {
-      return;
-    }
-
-    setIsApproving(true);
     try {
-      // Ask for approval
-      const res = await approveMarketplace(nftAddress, tokenId);
-      console.log(res);
       const approvedMarketplace = await fetchApprovedMarketplace(
         nftAddress,
         tokenId
       );
-      const approved = approvedMarketplace === addrMarketplace;
-      setApproved(approved);
-      console.log("wtf its approved");
-      /*if (approved) {
-        // ListNFT at marketplace if approced
-        const tx = await listNFT(nftAddress, tokenId, price);
 
-        console.log(tx);
-      }*/
+      const approved =
+        approvedMarketplace.toLowerCase() === addrMarketplace.toLowerCase();
+
+      setApproved(approved);
+
+      if (approved) {
+        setTxLoading(false);
+        return;
+      }
+
+      await approveMarketplace(nftAddress, tokenId);
+
+      const recheck = await fetchApprovedMarketplace(nftAddress, tokenId);
+      const finalApproved =
+        recheck.toLowerCase() === addrMarketplace.toLowerCase();
+
+      setApproved(finalApproved);
     } catch (err) {
-      setError(err as Error);
+      setTxError(err as Error);
       console.error(err);
     } finally {
-      setIsApproving(false);
+      setTxLoading(false);
     }
   };
 
   return {
-    isApproving,
     isApproved,
     handleApproveMarketplace,
-    error,
   };
 };

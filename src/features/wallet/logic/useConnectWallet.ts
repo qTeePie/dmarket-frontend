@@ -14,7 +14,7 @@ export function useConnectWallet() {
 
   const connect = async () => {
     if (typeof window === "undefined" || !window.ethereum) {
-      alert("No wallet found 😭");
+      alert("No wallet found");
       return;
     }
 

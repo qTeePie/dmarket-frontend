@@ -1,13 +1,14 @@
-"use client";
-
 import { useState } from "react";
 import { listNFT } from "@/lib/blockchain/write";
 import { fetchIsListed } from "@/lib/blockchain/read/fetchIsListed";
 
-export const useListNFT = () => {
-  const [isListing, setIsListing] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
+export const useListNFT = ({
+  setTxError,
+  setTxLoading,
+}: {
+  setTxError: (err: Error | null) => void;
+  setTxLoading: (loading: boolean) => void;
+}) => {
   const handleListNFT = async (
     nftAddress: string,
     account: string,
@@ -15,8 +16,8 @@ export const useListNFT = () => {
     price: number
   ) => {
     try {
-      setIsListing(true);
-      setError(null); // clear last error
+      setTxLoading(true);
+      setTxError(null); // clear last error
 
       // Check if already listed
       const alreadyListed = await fetchIsListed(nftAddress, account, tokenId);
@@ -28,16 +29,14 @@ export const useListNFT = () => {
       // 🚀 List the NFT
       await listNFT(nftAddress, tokenId, price);
     } catch (err) {
-      setError(err as Error);
+      setTxError(err as Error);
       console.error("ListNFT error:", err);
     } finally {
-      setIsListing(false);
+      setTxLoading(false);
     }
   };
 
   return {
-    isListing,
     handleListNFT,
-    error,
   };
 };
